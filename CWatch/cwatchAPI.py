@@ -47,6 +47,31 @@ class cwatchAPI(object):
         data = self.getJson("2",'vmserverstats')
         return data
 
+
+    def apicompany(self):
+        data = self.getJson("2",'Company')
+        return data
+
+    def apijobs(self,args=None):
+        if not args:
+           data = self.getJson("2",'jobs')
+        else:
+           data = self.getJson("2",'jobs/%s' % args)
+        return data
+
+    #API DOENST WORK YET FOR CW
+    def apinodes(self,id):
+        data = self.getJson("2",'Nodes/nodeid=%s' % id)
+        return data
+
+    def apiclientstats(self,id):
+        data = self.getJson("2",'ClientStats/nodeid=%s' % id)
+        return data
+
+    def apitrends(self,id,months):
+        data = self.getJson("2",'ClientStats/vulntrends?nodeid=%s&numberPriorMonths=%s' % (id,months))
+        return data
+
     def report(self,mtype="list",args=""):
         #startdata,enddate,hoursback,companyid
         if mtype == "list":
