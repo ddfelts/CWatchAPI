@@ -147,7 +147,11 @@ class cwatchAPI(object):
                 data["id"] = b.attrib.get("ID")
                 data["name"] = b.attrib.get("Name")
                 for c in b.iter(tag="Sequence"):
-                    data["seq"].append(c.attrib.get("ID"))
+                    mylist = {}
+                    mylist["id"] = c.attrib.get("ID")
+                    mylist["start"] = c[0].text
+                    mylist["end"] = c[1].text
+                    data["seq"].append(mylist)
                 fd.append(data)
                 data = {"seq":[]}
             return fd
