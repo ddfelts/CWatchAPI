@@ -129,8 +129,14 @@ class cwatchAPI(object):
          data = self.getXml("1",'/xsd.aspx?type=%s' % mtype)
          return data
 
+    def getCompanyNodeID(self,cn):
+        nata = self.apicompany()
+        for i in ndata:
+            if cn == i["Name"]:
+                return i["NodeId"]
+
     def getCompanyID(self,cn):
-        ndata = self.mssplist()
+        ndata = self.apicompany()
         for i in ndata:
             if cn == i["Name"]:
                return i["ID"]
