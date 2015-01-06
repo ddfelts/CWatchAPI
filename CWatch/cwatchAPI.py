@@ -131,7 +131,7 @@ class cwatchAPI(object):
 
     def getCompanyNodeID(self,cn):
         nata = self.apicompany()
-        for i in ndata:
+        for i in nata:
             if cn == i["Name"]:
                 return i["NodeId"]
 
