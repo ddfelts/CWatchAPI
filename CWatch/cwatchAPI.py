@@ -139,7 +139,7 @@ class cwatchAPI(object):
         ndata = self.apicompany()
         for i in ndata:
             if cn == i["Name"]:
-               return i["ID"]
+               return i["Id"]
 
     def getPreReport(self,cn):
         fd = []
