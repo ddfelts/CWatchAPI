@@ -1,4 +1,6 @@
-from cwatchAPI import *
+from CWatch.cwatchAPI import *
+from cwatchGraph import cwGraph
+from cwatchPDF import cwPDF
 from xml.etree import ElementTree
 import time
 import sys
@@ -17,17 +19,40 @@ if len(sys.argv) < 3:
    parser.print_help()
    sys.exit()
 
+graph = cwGraph()
+
 data = cwatchAPI(opt.user,opt.passw)
 nodeid = data.getCompanyNodeID(opt.client)
+main = []
+
 for i in data.apiclientstats(nodeid):
     if opt.client in i["Name"]:
-       print "--------------------------------"
-       print "Stats for client: %s" % opt.client
-       print "Scanned IpAddresses: %s" % i["ScannedIpAddresses"]
-       print "Responding IpAddresses: %s" % i["RespondingIpAddresses"]
-       print "High: %s" % i["TotalHighs"]
-       print "Med: %s" % i["TotalMediums"]
-       print "Lows: %s" % i["TotalLows"]
-       print "Warnings: %s" % i["TotalWarnings"]
-       print "--------------------------------"
-       print "Totals: %s" % i["TotalExposures"] 
+       main.append({"title":"High",
+                 "data":i["TotalHighs"]})
+       main.append({"title":"Med",
+                 "data":i["TotalMediums"]})
+       main.append({"title":"Lows",
+                 "data":i["TotalLows"]})
+       main.append({"title":"Warnings",
+                 "data":i["TotalWarnings"]})
+       scanned = i["ScannedIpAddresses"]
+       respond = i["RespondingIpAddresses"]
+
+ndata = {}
+ndata["ScannedIpAddresses"] = scanned
+ndata["RespondingIpAddresses"] = respond
+graph.HBar("Totals",main)
+nameit = opt.client + "-CWStats.pdf"
+doc = cwPDF(nameit)
+doc.setTitle("CriticalWatch Stats")
+doc.setDates("01-06-2015","01-06-2015")
+doc.setClient(opt.client)
+doc.setPortrait()
+doc.addStoryTitle("Critical Watch Stats")
+#doc.addStory("Scanned IpAddresses: %s" % scanned)
+#doc.addStory("Responding IpAddresses: %s" % respond)
+doc.addImage("%s/Totals.png" % graph.getDir(),450,200)
+doc.addTable(ndata)
+doc.savePDF()
+graph.removeDir()
+sys.exit(1)
